@@ -5,21 +5,20 @@
 </p>
 
 <h1 align="center">🧩 Laravel Dynamic Relations</h1>
+
 <p align="center">
-  <strong>Dynamic, declarative & trait-driven Eloquent relations</strong><br>
+  <strong>Dynamic, declarative & trait-driven Eloquent relations for modern Laravel apps</strong><br>
   by <a href="https://dd-developments.com">dd-developments</a> — Hosted in Belgium 🇧🇪
 </p>
 
 <p align="center">
   <a href="https://packagist.org/packages/dd-developments/laravel-dynamic-relations">
-    <img src="https://img.shields.io/packagist/v/dd-developments/laravel-dynamic-relations.svg?style=flat-square" alt="Latest Version">
+    <img src="https://img.shields.io/packagist/v/dd-developments/laravel-dynamic-relations.svg?style=flat-square" alt="Version">
   </a>
-  <a href="https://github.com/dd-developments/laravel-dynamic-relations/actions/workflows/tests.yml?branch=main">
-    <img src="https://img.shields.io/github/actions/workflow/status/dd-developments/laravel-dynamic-relations/tests.yml?branch=main&label=tests&style=flat-square" alt="GitHub Tests">
+  <a href="https://github.com/dd-developments/laravel-dynamic-relations/actions/workflows/tests.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/dd-developments/laravel-dynamic-relations/tests.yml?branch=main&label=tests&style=flat-square" alt="Tests">
   </a>
-  <a href="https://packagist.org/packages/dd-developments/laravel-dynamic-relations">
-    <img src="https://img.shields.io/packagist/dt/dd-developments/laravel-dynamic-relations.svg?style=flat-square" alt="Downloads">
-  </a>
+  <img src="https://img.shields.io/packagist/dt/dd-developments/laravel-dynamic-relations.svg?style=flat-square" alt="Downloads">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Laravel-12.x-ff2d20?style=flat-square&logo=laravel" alt="Laravel 12">
   <img src="https://img.shields.io/badge/PHP-8.3%2B-777bb4?style=flat-square&logo=php" alt="PHP 8.3+">
@@ -27,199 +26,121 @@
 
 ---
 
-# Table of Contents
-- [🇬🇧 English](#english)
-- [🇳🇱 Nederlands](#nederlands)
-- [🇫🇷 Français](#français)
-- [🇩🇪 Deutsch](#deutsch)
-- [📜 License](#license)
-- [🧠 Author](#author)
+## 💡 What is Laravel Dynamic Relations?
+
+**Laravel Dynamic Relations** brings a *next-level modularity* to your Eloquent models.  
+Instead of hardcoding relationships like `hasMany()` or `belongsTo()`, you can **define, register and resolve them dynamically** — via traits or config — keeping your models lightweight and flexible.
+
+Think of it as *“Eloquent relationships, but hot-swappable.”*  
+Every model can declare its links without being tightly coupled to others.
 
 ---
 
-## English
+## ✨ Key Features
 
-### 💡 What is this?
+✅ **Trait-first design** – Attach reusable relationship traits to any model  
+⚙️ **Declarative configuration** – Centralize mappings via `config/dynamic-relations.php`  
+🧬 **Runtime registration** – Define relations on-the-fly with `DynamicRelations::for()`  
+🧩 **All relation types supported** – `hasOne`, `hasMany`, `belongsTo`, `belongsToMany`, and all morphs  
+🚀 **Zero boilerplate** – Auto-registered via the Service Provider  
+🧱 **Modular & package-friendly** – Ideal for microservice or multi-module Laravel setups  
+💥 **“Everything is hot-swappable” philosophy** – Replace, extend, or override any relation dynamically
 
-**Laravel Dynamic Relations** lets you define **Eloquent relationships dynamically** —  
-no hardcoded `hasMany()` or `belongsTo()` methods needed.  
-This makes traits modular and reusable across projects and entities.
+---
 
-### ✨ Features
-- Declarative config (`config/dynamic-relations.php`)
-- Reusable trait-based API (`HasManyImages`, `IsFromAuthor`, …)
-- Supports `hasOne`, `hasMany`, `belongsTo`, `belongsToMany`, and all `morph*`
-- Auto-registered via Service Provider
-- Laravel 12 & PHP 8.3+ compatible
+## ⚙️ Installation
 
-### ⚙️ Installation
 ```bash
 composer require dd-developments/laravel-dynamic-relations
 php artisan vendor:publish --tag=dynamic-relations-config
 
-🧬 Example
+That’s it. The service provider automatically hooks into Laravel’s boot cycle and enables runtime mapping.
+🧬 Example — Trait-Based Relation
+
+Add reusable relationship logic to any model using traits.
+
+use DdDevelopments\DynamicRelations\Facades\DynamicRelations;
 
 trait HasManyImages
 {
     protected static function bootHasManyImages(): void
     {
-        DynamicRelations::for(static::class, 'images', fn ($m)
-            => $m->morphMany(Image::class, 'imageable'));
+        DynamicRelations::for(static::class, 'images', fn ($model) =>
+            $model->morphMany(Image::class, 'imageable'));
     }
 }
 
-🧩 Why this package?
+Then in your model:
 
-There are other relation-mapping tools,
-but none combine config + traits + runtime registration in one unified system.
-Feature	This package	Typical alternatives
+use App\Models\Traits\HasManyImages;
+
+class Post extends Model
+{
+    use HasManyImages;
+}
+
+That’s it — no need to touch your Post model’s body again.
+Each relation lives in its own modular trait and can be reused across the ecosystem.
+🧠 Why this Package Exists
+
+Laravel’s Eloquent ORM is powerful, but static.
+Relationships are normally baked directly into models, making code harder to reuse across modules or packages.
+
+Laravel Dynamic Relations fixes that by providing a declarative API and a runtime registration layer, merging the best of both worlds:
+config-driven flexibility and trait-based simplicity.
+Feature	This Package	Typical Alternatives
 Trait-first design	✅	❌
 Config-driven maps	✅	⚠️ Partial
 Runtime registration (DynamicRelations::for)	✅	❌
 Full morph coverage	✅	⚠️
 Laravel 12 + Pest v4 support	✅	⚠️
-Hot-swappable (replaceable relations)	✅	❌
-Nederlands
-💡 Wat is dit?
+Hot-swappable relations	✅	❌
+🧩 Example Config (Optional)
 
-Laravel Dynamic Relations maakt het mogelijk om Eloquent-relaties dynamisch en modulair te definiëren —
-zonder vaste hasMany() of belongsTo() in je models.
-Hiermee worden traits echt herbruikbaar in al je projecten.
-✨ Functies
+Prefer central control? You can declare all relations from config/dynamic-relations.php:
 
-    Declaratieve configuratie (config/dynamic-relations.php)
+return [
+    App\Models\Post::class => [
+        'author' => fn ($m) => $m->belongsTo(App\Models\User::class, 'user_id'),
+        'images' => fn ($m) => $m->morphMany(App\Models\Image::class, 'imageable'),
+    ],
+];
 
-    Herbruikbare trait-gebaseerde relaties (HasManyImages, IsFromAuthor, …)
+Every time Laravel boots, these are automatically registered — no manual wiring required.
+🧰 Ideal Use Cases
 
-    Ondersteunt alle Eloquent-relaties (ook polymorfische)
+    🧩 Modular CMS architectures
 
-    Automatisch geladen via ServiceProvider
+    🧱 Multi-tenant or multi-package Laravel setups
 
-    Compatibel met Laravel 12 & PHP 8.3+
+    🧪 Package development (shared traits between domains)
 
-⚙️ Installatie
+    🔁 Dynamic content models (relations change based on config)
 
-composer require dd-developments/laravel-dynamic-relations
-php artisan vendor:publish --tag=dynamic-relations-config
+    ⚡ Projects embracing “Everything is hot-swappable” philosophy
 
-🧬 Voorbeeld
+🧪 Testing Support
 
-trait IsFromAuthor
-{
-    protected static function bootIsFromAuthor(): void
-    {
-        DynamicRelations::for(static::class, 'author', fn ($m)
-            => $m->belongsTo(User::class, 'user_id'));
-    }
-}
+This package ships ready for Pest v4 and Orchestra Testbench.
+Simply run:
 
-🧩 Waarom dit package?
+composer test
 
-Geen enkel alternatief combineert config + traits + runtime-registratie in één oplossing.
-Kenmerk	Dit package	Alternatieven
-Trait-first ontwerp	✅	❌
-Config-gedreven maps	✅	⚠️
-Runtime registratie (DynamicRelations::for)	✅	❌
-Volledige morph-ondersteuning	✅	⚠️
-Laravel 12 + Pest v4 support	✅	⚠️
-Hot-swappable architectuur	✅	❌
-Français
-💡 Qu'est-ce que c'est ?
+and you’re good to go.
+📜 License
 
-Laravel Dynamic Relations permet de définir vos relations Eloquent de manière dynamique et déclarative,
-sans les coder directement dans vos modèles.
-Les traits deviennent ainsi réutilisables et modulaires.
-✨ Fonctionnalités
+Released under the MIT License
+© 2025 dd-developments.com
 
-    Configuration déclarative (config/dynamic-relations.php)
+— All rights reserved.
+🧠 Author
 
-    API basée sur des traits réutilisables (HasManyImages, IsFromAuthor, …)
-
-    Support complet de toutes les relations Eloquent, y compris polymorphes
-
-    Fournisseur de service automatique
-
-    Compatible avec Laravel 12 et PHP 8.3+
-
-⚙️ Installation
-
-composer require dd-developments/laravel-dynamic-relations
-php artisan vendor:publish --tag=dynamic-relations-config
-
-🧬 Exemple
-
-trait HasManyImages
-{
-    protected static function bootHasManyImages(): void
-    {
-        DynamicRelations::for(static::class, 'images', fn ($m)
-            => $m->morphMany(Image::class, 'imageable'));
-    }
-}
-
-🧩 Pourquoi ce package ?
-
-Aucun autre package ne combine configuration + traits + enregistrement dynamique dans un seul système.
-Fonction	Ce package	Alternatives
-Conception basée sur les traits	✅	❌
-Configuration déclarative	✅	⚠️
-Enregistrement dynamique (DynamicRelations::for)	✅	❌
-Support complet des relations morphiques	✅	⚠️
-Support Laravel 12 + Pest v4	✅	⚠️
-Architecture modulaire et échangeable	✅	❌
-Deutsch
-💡 Was ist das?
-
-Laravel Dynamic Relations ermöglicht es, Eloquent-Beziehungen dynamisch und deklarativ zu definieren –
-ohne sie fest in deinen Models zu codieren.
-So werden Traits wirklich wiederverwendbar und modular.
-✨ Funktionen
-
-    Deklarative Konfiguration (config/dynamic-relations.php)
-
-    Wiederverwendbare Trait-basierte API (HasManyImages, IsFromAuthor, …)
-
-    Unterstützung aller Eloquent-Relationen (auch polymorph)
-
-    Automatische Registrierung über Service Provider
-
-    Kompatibel mit Laravel 12 und PHP 8.3+
-
-⚙️ Installation
-
-composer require dd-developments/laravel-dynamic-relations
-php artisan vendor:publish --tag=dynamic-relations-config
-
-🧬 Beispiel
-
-trait IsFromAuthor
-{
-    protected static function bootIsFromAuthor(): void
-    {
-        DynamicRelations::for(static::class, 'author', fn ($m)
-            => $m->belongsTo(User::class, 'user_id'));
-    }
-}
-
-🧩 Warum dieses Paket?
-
-Kein anderes Paket kombiniert Konfiguration + Traits + Laufzeit-Registrierung in einem System.
-Merkmal	Dieses Paket	Alternativen
-Trait-first Design	✅	❌
-Konfigurationsgetriebene Zuordnung	✅	⚠️
-Laufzeitregistrierung (DynamicRelations::for)	✅	❌
-Volle Morph-Unterstützung	✅	⚠️
-Laravel 12 + Pest v4 Support	✅	⚠️
-Hot-swappable Architektur	✅	❌
-License
-
-MIT © 2025 dd-developments.com
-Author
-
-Developed with 💡 by Daniel Demesmaecker
+Built with 💡 by Daniel Demesmaecker
 for dd-developments.com
 
 — Hosted in Belgium 🇧🇪
 
     Everything is hot-swappable.
-    Built for modular CMS architecture where every relation is replaceable, extendable & reusable.
+    Built for modular CMS architectures where every relation is replaceable, extendable, and reusable.
+
+<p align="center"> <sub>Crafted with precision by <a href="https://dd-developments.com">dd-developments</a> • Innovation through modularity.</sub> </p> 
