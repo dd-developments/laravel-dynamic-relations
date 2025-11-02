@@ -1,7 +1,6 @@
 <p align="center">
   <a href="https://dd-developments.com" target="_blank">
-    <img src="https://drive.google.com/uc?export=view&id=1M4B_F7Go5-hNkmgDrXu8ffbOqTG2gfVE" alt="dd-developments Hawk Logo" width="180">
-  </a>
+  <img src=".github/assets/logo.png" width="180" alt="dd-developments Hawk Logo"> </a>
 </p>
 
 <h1 align="center">🧩 Laravel Dynamic Relations</h1>
