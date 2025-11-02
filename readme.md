@@ -1,9 +1,8 @@
 <p align="center">
   <a href="https://dd-developments.com" target="_blank" rel="noopener">
-<img src=".github/assets/logo.png" width="180" alt="dd-developments Hawk Logo">
-</a>
+    <img src=".github/assets/logo.png" width="180" alt="dd-developments Hawk Logo">
+  </a>
 </p>
-
 
 <h1 align="center">🧩 Laravel Dynamic Relations</h1>
 <p align="center">
@@ -29,46 +28,16 @@
 ---
 
 # Table of Contents
-
-## 🇬🇧 English
-- 💡 What is this?
-- ✨ Features
-- ⚙️ Installation
-- 🧬 Example
-- 🧩 Why this package?
-- 🧠 Author
-- 📜 License
-
-## 🇳🇱 Nederlands
-- 💡 Wat is dit?
-- ✨ Functies
-- ⚙️ Installatie
-- 🧬 Voorbeeld
-- 🧩 Waarom dit package?
-- 🧠 Auteur
-- 📜 Licentie
-
-## 🇫🇷 Français
-- 💡 Qu'est-ce que c'est ?
-- ✨ Fonctionnalités
-- ⚙️ Installation
-- 🧬 Exemple
-- 🧩 Pourquoi ce package ?
-- 🧠 Auteur
-- 📜 Licence
-
-## 🇩🇪 Deutsch
-- 💡 Was ist das?
-- ✨ Funktionen
-- ⚙️ Installation
-- 🧬 Beispiel
-- 🧩 Warum dieses Paket?
-- 🧠 Autor
-- 📜 Lizenz
+- [🇬🇧 English](#english)
+- [🇳🇱 Nederlands](#nederlands)
+- [🇫🇷 Français](#français)
+- [🇩🇪 Deutsch](#deutsch)
+- [📜 License](#license)
+- [🧠 Author](#author)
 
 ---
 
-## 🇬🇧 English
+## English
 
 ### 💡 What is this?
 
@@ -110,24 +79,11 @@ Runtime registration (DynamicRelations::for)	✅	❌
 Full morph coverage	✅	⚠️
 Laravel 12 + Pest v4 support	✅	⚠️
 Hot-swappable (replaceable relations)	✅	❌
-🧠 Author
-
-Developed with 💡 by Daniel Demesmaecker
-for dd-developments.com
-
-— Hosted in Belgium 🇧🇪
-
-    Everything is hot-swappable.
-    Built for modular CMS architecture where every relation is replaceable, extendable, and reusable.
-
-📜 License
-
-MIT © 2025 dd-developments.com
-🇳🇱 Nederlands
+Nederlands
 💡 Wat is dit?
 
-Laravel Dynamic Relations laat je Eloquent-relaties dynamisch definiëren,
-zonder vaste hasMany() of belongsTo()-methodes in je models.
+Laravel Dynamic Relations maakt het mogelijk om Eloquent-relaties dynamisch en modulair te definiëren —
+zonder vaste hasMany() of belongsTo() in je models.
 Hiermee worden traits echt herbruikbaar in al je projecten.
 ✨ Functies
 
@@ -167,20 +123,7 @@ Runtime registratie (DynamicRelations::for)	✅	❌
 Volledige morph-ondersteuning	✅	⚠️
 Laravel 12 + Pest v4 support	✅	⚠️
 Hot-swappable architectuur	✅	❌
-🧠 Auteur
-
-Ontwikkeld met 💡 door Daniel Demesmaecker
-voor dd-developments.com
-
-— Gehost in België 🇧🇪
-
-    Everything is hot-swappable.
-    Gebouwd voor een modulaire CMS-architectuur waar elke relatie vervangbaar, uitbreidbaar en herbruikbaar is.
-
-📜 Licentie
-
-MIT © 2025 dd-developments.com
-🇫🇷 Français
+Français
 💡 Qu'est-ce que c'est ?
 
 Laravel Dynamic Relations permet de définir vos relations Eloquent de manière dynamique et déclarative,
@@ -224,20 +167,7 @@ Enregistrement dynamique (DynamicRelations::for)	✅	❌
 Support complet des relations morphiques	✅	⚠️
 Support Laravel 12 + Pest v4	✅	⚠️
 Architecture modulaire et échangeable	✅	❌
-🧠 Auteur
-
-Développé avec 💡 par Daniel Demesmaecker
-pour dd-developments.com
-
-— Hébergé en Belgique 🇧🇪
-
-    Everything is hot-swappable.
-    Construit pour une architecture CMS modulaire où chaque relation est remplaçable et extensible.
-
-📜 Licence
-
-MIT © 2025 dd-developments.com
-🇩🇪 Deutsch
+Deutsch
 💡 Was ist das?
 
 Laravel Dynamic Relations ermöglicht es, Eloquent-Beziehungen dynamisch und deklarativ zu definieren –
@@ -281,16 +211,15 @@ Laufzeitregistrierung (DynamicRelations::for)	✅	❌
 Volle Morph-Unterstützung	✅	⚠️
 Laravel 12 + Pest v4 Support	✅	⚠️
 Hot-swappable Architektur	✅	❌
-🧠 Autor
-
-Entwickelt mit 💡 von Daniel Demesmaecker
-für dd-developments.com
-
-— Gehostet in Belgien 🇧🇪
-
-    Everything is hot-swappable.
-    Entwickelt für eine modulare CMS-Architektur, in der jede Beziehung austauschbar und erweiterbar ist.
-
-📜 Lizenz
+License
 
 MIT © 2025 dd-developments.com
+Author
+
+Developed with 💡 by Daniel Demesmaecker
+for dd-developments.com
+
+— Hosted in Belgium 🇧🇪
+
+    Everything is hot-swappable.
+    Built for modular CMS architecture where every relation is replaceable, extendable & reusable.
