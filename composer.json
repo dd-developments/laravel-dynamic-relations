@@ -1,0 +1,44 @@
+{
+  "name": "dd-developments/laravel-dynamic-relations",
+  "description": "Dynamic, declarative Eloquent relations via maps + resolveRelationUsing.",
+  "version": "0.1.0",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "DdDevelopments\\DynamicRelations\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DdDevelopments\\DynamicRelations\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": "^8.3",
+    "illuminate/database": "^12.0",
+    "illuminate/support": "^12.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^10.5",
+    "pestphp/pest": "^4.0",
+    "pestphp/pest-plugin-laravel": "^4.0"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "scripts": {
+    "test": "pest"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DdDevelopments\\DynamicRelations\\DynamicRelationsServiceProvider"
+      ]
+    }
+  }
+}

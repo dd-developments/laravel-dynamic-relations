@@ -1,0 +1,19 @@
+# Composer
+/vendor
+/composer.lock
+
+# PHPUnit/Pest cache
+.phpunit.cache
+coverage
+.php-cs-fixer.cache
+
+# Workbench (Testbench)
+/workbench
+
+# IDE
+/.idea
+/.vscode
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+# Exclude dev files from distribution
+/.github            export-ignore
+/tests              export-ignore
+/.editorconfig      export-ignore
+/.gitignore         export-ignore
+/.gitattributes     export-ignore
+/phpunit.xml*       export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/.idea              export-ignore
