@@ -14,7 +14,7 @@
   <a href="https://packagist.org/packages/dd-developments/laravel-dynamic-relations">
     <img src="https://img.shields.io/packagist/v/dd-developments/laravel-dynamic-relations.svg?style=flat-square" alt="Latest Version">
   </a>
-  <a href="https://github.com/dd-developments/laravel-dynamic-relations/actions/workflows/tests.yml">
+  <a href="https://github.com/dd-developments/laravel-dynamic-relations/actions/workflows/tests.yml?branch=main">
     <img src="https://img.shields.io/github/actions/workflow/status/dd-developments/laravel-dynamic-relations/tests.yml?branch=main&label=tests&style=flat-square" alt="GitHub Tests">
   </a>
   <a href="https://packagist.org/packages/dd-developments/laravel-dynamic-relations">
@@ -33,8 +33,8 @@
 |:--|:--|
 | [🇬🇧 English](#english) | Main documentation |
 | [🇳🇱 Nederlands](#nederlands) | Nederlandstalige uitleg |
-| [🇫🇷 Français](#français) | Documentation en français |
-| [🇩🇪 Deutsch](#deutsch) | Deutsche Dokumentation |
+| [🇫🇷 Français](#fr) | Documentation en français |
+| [🇩🇪 Deutsch](#de) | Deutsche Dokumentation |
 | [🧩 Why this package?](#why-this-package) | What makes this unique |
 | [🧬 Compatibility](#compatibility) | Laravel / PHP versions |
 | [🚀 Roadmap](#roadmap) | Upcoming versions |
@@ -43,9 +43,11 @@
 
 ---
 
-## 🇬🇧 English {#english}
+<a id="english">&#8203;</a>
+## 🇬🇧 English
 
-**Laravel Dynamic Relations** lets you define **Eloquent relationships dynamically**, without hardcoding them in your models.
+**Laravel Dynamic Relations** lets you define **Eloquent relationships dynamically**,  
+without hardcoding them in your models.
 
 ### ✨ Features
 - Declarative config (`config/dynamic-relations.php`)
@@ -70,9 +72,11 @@ trait HasManyImages
     }
 }
 
-🇳🇱 Nederlands {#nederlands}
+<a id="nederlands"></a>
+🇳🇱 Nederlands
 
-Laravel Dynamic Relations maakt het mogelijk om Eloquent-relaties dynamisch en modulair te definiëren — zonder vaste hasMany() of belongsTo() in je models.
+Laravel Dynamic Relations maakt het mogelijk om Eloquent-relaties dynamisch en modulair te definiëren —
+zonder vaste hasMany() of belongsTo() in je models.
 ✨ Functies
 
     Declaratieve configuratie (config/dynamic-relations.php)
@@ -101,9 +105,11 @@ trait IsFromAuthor
     }
 }
 
-🇫🇷 Français {#français}
+<a id="fr"></a>
+🇫🇷 Français
 
-Laravel Dynamic Relations permet de définir vos relations Eloquent de manière dynamique, sans les coder directement dans vos modèles.
+Laravel Dynamic Relations permet de définir vos relations Eloquent de manière dynamique,
+sans les coder directement dans vos modèles.
 ✨ Points forts
 
     Configuration déclarative (config/dynamic-relations.php)
@@ -116,9 +122,27 @@ Laravel Dynamic Relations permet de définir vos relations Eloquent de manière 
 
     Compatible Laravel 12 / PHP 8.3+
 
-🇩🇪 Deutsch {#deutsch}
+⚙️ Installation
 
-Laravel Dynamic Relations ermöglicht es, Eloquent-Beziehungen dynamisch und modular zu definieren – ohne sie fest in deinen Models zu verankern.
+composer require dd-developments/laravel-dynamic-relations
+php artisan vendor:publish --tag=dynamic-relations-config
+
+🧬 Exemple (Trait)
+
+trait HasManyImages
+{
+    protected static function bootHasManyImages(): void
+    {
+        DynamicRelations::for(static::class, 'images', fn ($m)
+            => $m->morphMany(Image::class, 'imageable'));
+    }
+}
+
+<a id="de"></a>
+🇩🇪 Deutsch
+
+Laravel Dynamic Relations ermöglicht es, Eloquent-Beziehungen dynamisch und modular zu definieren –
+ohne dass du sie fest in deinen Models hinterlegen musst.
 ✨ Funktionen
 
     Deklarative Konfiguration (config/dynamic-relations.php)
@@ -131,33 +155,60 @@ Laravel Dynamic Relations ermöglicht es, Eloquent-Beziehungen dynamisch und mod
 
     Kompatibel mit Laravel 12 & PHP 8.3+
 
-🧩 Why this package? {#why-this-package}
+⚙️ Installation
+
+composer require dd-developments/laravel-dynamic-relations
+php artisan vendor:publish --tag=dynamic-relations-config
+
+🧬 Beispiel (Trait)
+
+trait IsFromAuthor
+{
+    protected static function bootIsFromAuthor(): void
+    {
+        DynamicRelations::for(static::class, 'author', fn ($m)
+            => $m->belongsTo(User::class, 'user_id'));
+    }
+}
+
+<a id="why-this-package"></a>
+🧩 Why this package?
 
 There are other relation-mapping packages, but none combine config + traits + runtime registration in one system.
 Feature	This package	Typical alternatives
 Trait-first design	✅	❌
-Config-driven maps	✅	⚠️
+Config-driven maps	✅	⚠️ Partial
 Runtime registration (DynamicRelations::for)	✅	❌
 Full morph coverage (morphTo)	✅	⚠️
 Laravel 12 + Pest v4 support	✅	⚠️
 Hot-swappable (“everything replaceable”)	✅	❌
-🧬 Compatibility {#compatibility}
+
+<a id="compatibility"></a>
+🧬 Compatibility
 Laravel	PHP	Pest	Testbench	Status
 12.x	8.3–8.4	4.x	10.x	✅ Stable
-🚀 Roadmap {#roadmap}
+
+<a id="roadmap"></a>
+🚀 Roadmap
 Version	Planned features
 v0.2	Attribute-based declaration (#[Relation(...)])
 v0.3	Larastan / PHPStan rules + stubs
 v0.4	Multi-tenant resolvers
 v1.0	Stable API & documentation
-📜 License {#license}
+
+<a id="license"></a>
+📜 License
 
 Licensed under MIT © 2025 dd-developments.com
-🧠 Author {#author}
+
+<a id="author"></a>
+🧠 Author
 
 Developed with 💡 by Daniel Demesmaecker
 for dd-developments.com
 
+
 — Hosted in Belgium 🇧🇪
 
-    Everything is hot-swappable. Built for the modular CMS architecture where every relation is replaceable, extendable, and reusable.
+    Everything is hot-swappable.
+    Built for the modular CMS architecture where every relation is replaceable, extendable, and reusable.
