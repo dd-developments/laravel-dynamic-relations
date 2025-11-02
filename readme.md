@@ -27,20 +27,15 @@
 
 ---
 
-# Table of Contents
-- [🇬🇧 English](#english)
-- [🇳🇱 Nederlands](#nederlands)
-- [🇫🇷 Français](#français)
-- [🇩🇪 Deutsch](#deutsch)
-- [📜 License](#license)
-- [🧠 Author](#author)
+## 🌍 Table of Contents
+🇬🇧 [English](#english) • 🇳🇱 [Nederlands](#nederlands) • 🇫🇷 [Français](#français) • 🇩🇪 [Deutsch](#deutsch)  
+📜 [License](#license) • 🧠 [Author](#author)
 
 ---
 
 ## English
 
 ### 💡 What is this?
-
 **Laravel Dynamic Relations** lets you define **Eloquent relationships dynamically** —  
 no hardcoded `hasMany()` or `belongsTo()` methods needed.  
 This makes traits modular and reusable across projects and entities.
@@ -84,7 +79,6 @@ Nederlands
 
 Laravel Dynamic Relations maakt het mogelijk om Eloquent-relaties dynamisch en modulair te definiëren —
 zonder vaste hasMany() of belongsTo() in je models.
-Hiermee worden traits echt herbruikbaar in al je projecten.
 ✨ Functies
 
     Declaratieve configuratie (config/dynamic-relations.php)
@@ -128,7 +122,6 @@ Français
 
 Laravel Dynamic Relations permet de définir vos relations Eloquent de manière dynamique et déclarative,
 sans les coder directement dans vos modèles.
-Les traits deviennent ainsi réutilisables et modulaires.
 ✨ Fonctionnalités
 
     Configuration déclarative (config/dynamic-relations.php)
@@ -172,7 +165,6 @@ Deutsch
 
 Laravel Dynamic Relations ermöglicht es, Eloquent-Beziehungen dynamisch und deklarativ zu definieren –
 ohne sie fest in deinen Models zu codieren.
-So werden Traits wirklich wiederverwendbar und modular.
 ✨ Funktionen
 
     Deklarative Konfiguration (config/dynamic-relations.php)
