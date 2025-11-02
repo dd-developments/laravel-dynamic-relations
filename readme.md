@@ -143,4 +143,4 @@ for dd-developments.com
     Everything is hot-swappable.
     Built for modular CMS architectures where every relation is replaceable, extendable, and reusable.
 
-<p align="center"> <sub>Crafted with precision by <a href="https://dd-developments.com">dd-developments</a> • Innovation through modularity.</sub> </p> ```
+<p align="center"> <sub>Crafted with precision by <a href="https://dd-developments.com">dd-developments</a> • Innovation through modularity.</sub> </p> 
