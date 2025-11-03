@@ -28,7 +28,7 @@ jobs:
 
       - name: Quick check extensions
         run: |
-          php -r "foreach(['pdo','pdo_sqlite','sqlite3'] as $e){echo $e.': '.(extension_loaded($e)?'yes':'no').PHP_EOL;};"
+          php -r 'foreach(["pdo","pdo_sqlite","sqlite3"] as $e){echo $e.": ".(extension_loaded($e)?"yes":"no").PHP_EOL;};'
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
