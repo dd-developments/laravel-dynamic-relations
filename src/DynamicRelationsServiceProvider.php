@@ -9,6 +9,22 @@ use InvalidArgumentException;
 
 class DynamicRelationsServiceProvider extends ServiceProvider
 {
+     protected function findConfigPath(): ?string
+    {
+        $candidates = [
+            __DIR__ . '/../config/dynamic-relations.php',   // provider direct onder src/
+            __DIR__ . '/../../config/dynamic-relations.php',// provider onder src/Providers/...
+            dirname(__DIR__) . '/config/dynamic-relations.php', // src/.. → package root → config
+        ];
+
+        foreach ($candidates as $path) {
+            if (is_file($path)) {
+                return $path;
+            }
+        }
+        return null;
+    }
+
     public function register(): void
     {
 
