@@ -8,7 +8,7 @@
 
 <p align="center">
   <strong>Dynamic, declarative & trait-driven Eloquent relations for modern Laravel apps</strong><br>
-  by <a href="https://dd-developments.com">dd-developments</a> — Hosted in Belgium 🇧🇪
+  by <a href="https://dd-development.com">dd-developments</a> — Hosted in Belgium 🇧🇪
 </p>
 
 <p align="center">
@@ -136,7 +136,7 @@ Released under the MIT License
 🧠 Author
 
 Built with 💡 by Daniel Demesmaecker
-for dd-developments.com
+for dd-development.com
 
 — Hosted in Belgium 🇧🇪
 
