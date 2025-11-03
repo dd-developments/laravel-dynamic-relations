@@ -8,6 +8,10 @@ on:
 jobs:
   pest:
     runs-on: ubuntu-latest
+    env:
+      APP_ENV: testing
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      DB_CONNECTION: testing
 
     steps:
       - uses: actions/checkout@v4
@@ -20,18 +24,24 @@ jobs:
           coverage: none
           ini-values: error_reporting=E_ALL, display_errors=On
 
+      - name: Show PHP info (debug)
+        run: |
+          php -v
+          php -m | sort
+          php -r "echo 'pdo_sqlite ext? ', in_array('pdo_sqlite', get_loaded_extensions()) ? 'yes' : 'no', PHP_EOL;"
+          php -r "echo 'sqlite3 ext? ', in_array('sqlite3', get_loaded_extensions()) ? 'yes' : 'no', PHP_EOL;"
+
       - name: Validate composer.json
         run: composer validate --no-check-publish
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      # Zet basis env zodat Testbench nooit klaagt
-      - name: Prepare env
-        run: |
-          echo "APP_ENV=testing" >> $GITHUB_ENV
-          echo "APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" >> $GITHUB_ENV
-          echo "DB_CONNECTION=testing" >> $GITHUB_ENV
+      - name: Dump autoload (just in case)
+        run: composer dump-autoload -o
 
-      - name: Run tests
+      - name: List dev packages (debug)
+        run: composer show -D
+
+      - name: Run tests (verbose)
         run: vendor/bin/pest -v
