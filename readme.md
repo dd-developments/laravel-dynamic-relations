@@ -15,8 +15,7 @@
   <a href="https://packagist.org/packages/dd-developments/laravel-dynamic-relations">
     <img src="https://img.shields.io/packagist/v/dd-developments/laravel-dynamic-relations.svg?style=flat-square" alt="Version">
   </a>
-  <a href="https://github.com/dd-developments/laravel-dynamic-relations/actions/workflows/test.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/dd-developments/laravel-dynamic-relations/tests.yml?branch=main&label=tests&style=flat-square" alt="Tests">
+[![Tests](https://github.com/dd-developments/laravel-dynamic-relations/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/dd-developments/laravel-dynamic-relations/actions/workflows/test.yml)    <img src="https://img.shields.io/github/actions/workflow/status/dd-developments/laravel-dynamic-relations/tests.yml?branch=main&label=tests&style=flat-square" alt="Tests">
   </a>
   <img src="https://img.shields.io/packagist/dt/dd-developments/laravel-dynamic-relations.svg?style=flat-square" alt="Downloads">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License">
