@@ -34,9 +34,8 @@ class DynamicRelationsServiceProvider extends ServiceProvider
             if (is_file($path)) {
                 $this->mergeConfigFrom($path, 'dynamic-relations');
 
-                // registreer beide tags – geen guards, geen console check
-                static::publishes([$path => config_path('dynamic-relations.php')], 'dynamic-relations-config');
-                static::publishes([$path => config_path('dynamic-relations.php')], 'config');
+                $this->publishes([$path => config_path('dynamic-relations.php')], 'dynamic-relations-config');
+                $this->publishes([$path => config_path('dynamic-relations.php')], 'config');
                 break; // eerste hit is genoeg
             }
         }
