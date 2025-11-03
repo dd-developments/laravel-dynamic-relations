@@ -4,6 +4,7 @@ namespace DdDevelopments\DynamicRelations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 
@@ -45,7 +46,7 @@ class DynamicRelationsServiceProvider extends ServiceProvider
     {
         // Alleen je relation-registratie; géén publishes hier
         $relations = config('dynamic-relations.relations');
-        if (! is_array($relations)) {
+        if (!is_array($relations)) {
             return;
         }
 
@@ -54,33 +55,55 @@ class DynamicRelationsServiceProvider extends ServiceProvider
                 continue;
             }
             foreach ($defs as $name => $def) {
-                $type       = strtolower((string) \Illuminate\Support\Arr::get($def, 'type'));
-                $related    = \Illuminate\Support\Arr::get($def, 'related');
+                $type = strtolower((string)\Illuminate\Support\Arr::get($def, 'type'));
+                $related = \Illuminate\Support\Arr::get($def, 'related');
                 $foreignKey = \Illuminate\Support\Arr::get($def, 'foreign_key');
-                $localKey   = \Illuminate\Support\Arr::get($def, 'local_key');
-                $ownerKey   = \Illuminate\Support\Arr::get($def, 'owner_key');
+                $localKey = \Illuminate\Support\Arr::get($def, 'local_key');
+                $ownerKey = \Illuminate\Support\Arr::get($def, 'owner_key');
                 $pivotTable = \Illuminate\Support\Arr::get($def, 'pivot');
-                $using      = \Illuminate\Support\Arr::get($def, 'using');
-                $morphName  = \Illuminate\Support\Arr::get($def, 'morph_name');
-                $where      = (array) \Illuminate\Support\Arr::get($def, 'where', []);
+                $using = \Illuminate\Support\Arr::get($def, 'using');
+                $morphName = \Illuminate\Support\Arr::get($def, 'morph_name');
+                $where = (array)\Illuminate\Support\Arr::get($def, 'where', []);
 
                 if ($type !== 'morphto') {
                     if (!is_string($related) || !class_exists($related)) {
-                        throw new \InvalidArgumentException("DynamicRelations: [{$parentClass}->{$name}] related class niet gevonden: " . (string) $related);
+                        // Niet crashen: relation overslaan (app kan dit later wél definiëren)
+                        if (config('app.debug')) {
+                            Log::notice("DynamicRelations: relation {$parentClass}->{$name} overgeslagen; related class niet gevonden: " . (string)$related);
+                        }
+                        continue; // <-- i.p.v. throw
                     }
                 }
 
                 /** @var class-string<\Illuminate\Database\Eloquent\Model> $parentClass */
                 $parentClass::resolveRelationUsing($name, function (\Illuminate\Database\Eloquent\Model $model) use ($type, $related, $foreignKey, $localKey, $ownerKey, $pivotTable, $using, $morphName, $where) {
                     switch ($type) {
-                        case 'hasone':        $rel = $model->hasOne($related, $foreignKey, $localKey); break;
-                        case 'hasmany':       $rel = $model->hasMany($related, $foreignKey, $localKey); break;
-                        case 'belongsto':     $rel = $model->belongsTo($related, $foreignKey, $ownerKey); break;
-                        case 'belongstomany': $rel = $model->belongsToMany($related, $pivotTable, $foreignKey, $localKey); if (is_string($using) && class_exists($using)) { $rel = $rel->using($using); } break;
-                        case 'morphone':      $rel = $model->morphOne($related, $morphName); break;
-                        case 'morphmany':     $rel = $model->morphMany($related, $morphName); break;
-                        case 'morphto':       $rel = $model->morphTo($morphName); break;
-                        default: throw new \InvalidArgumentException("DynamicRelations: unsupported type [{$type}].");
+                        case 'hasone':
+                            $rel = $model->hasOne($related, $foreignKey, $localKey);
+                            break;
+                        case 'hasmany':
+                            $rel = $model->hasMany($related, $foreignKey, $localKey);
+                            break;
+                        case 'belongsto':
+                            $rel = $model->belongsTo($related, $foreignKey, $ownerKey);
+                            break;
+                        case 'belongstomany':
+                            $rel = $model->belongsToMany($related, $pivotTable, $foreignKey, $localKey);
+                            if (is_string($using) && class_exists($using)) {
+                                $rel = $rel->using($using);
+                            }
+                            break;
+                        case 'morphone':
+                            $rel = $model->morphOne($related, $morphName);
+                            break;
+                        case 'morphmany':
+                            $rel = $model->morphMany($related, $morphName);
+                            break;
+                        case 'morphto':
+                            $rel = $model->morphTo($morphName);
+                            break;
+                        default:
+                            throw new \InvalidArgumentException("DynamicRelations: unsupported type [{$type}].");
                     }
 
                     foreach ($where as $col => $val) {
