@@ -37,4 +37,4 @@ jobs:
         run: composer dump-autoload -o
 
       - name: Run tests (verbose)
-        run: vendor/bin/pest -vvv
+        run: php vendor/bin/pest -vvv
