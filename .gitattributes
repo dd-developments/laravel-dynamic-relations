@@ -1,5 +1,4 @@
 # Exclude dev files from distribution
-/.github            export-ignore
 /tests              export-ignore
 /.editorconfig      export-ignore
 /.gitignore         export-ignore
