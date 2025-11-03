@@ -11,99 +11,99 @@ class DynamicRelationsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/dynamic-relations.php',
-            'dynamic-relations'
-        );
+
+        $this->mergeConfigFrom(__DIR__ . '/config/dynamic-relations.php', 'dynamic-relations');
     }
 
     public function boot(): void
     {
-        // Config publiceerbaar maken: php artisan vendor:publish --tag=dynamic-relations-config
         $this->publishes([
-            __DIR__ . '/../config/dynamic-relations.php' => config_path('dynamic-relations.php'),
-        ], 'dynamic-relations-config');
+            __DIR__ . '.config/dynamic-relations.php' => config_path('dynamic-relations.php'),
+        ], 'config');
 
-        // Declaratieve mappings registreren
-        $maps = (array)config('dynamic-relations.relations', []);
-        foreach ($maps as $modelClass => $relations) {
-            if (!is_string($modelClass) || !class_exists($modelClass)) {
-                throw new InvalidArgumentException("dynamic-relations: Model class '{$modelClass}' bestaat niet.");
+        $relations = (array) config('dynamic-relations.relations', []);
+
+        foreach ($relations as $parentClass => $defs) {
+            if (!class_exists($parentClass)) {
+                // parent model bestaat niet — sla over
+                continue;
             }
-            foreach ((array)$relations as $name => $def) {
-                $resolver = $this->makeResolver($modelClass, $name, (array)$def);
-                DynamicRelations::for($modelClass, (string)$name, $resolver);
-            }
-        }
-    }
-    /**
-     * Bouwt een relation-resolver-closure op basis van de declaratieve definitie.
-     *
-     * Ondersteunde keys in $def:
-     * - type: hasOne|hasMany|belongsTo|belongsToMany|morphOne|morphMany|morphToMany|morphedByMany (vereist)
-     * - related: class-string<Model> (vereist voor alle behalve morphToMany/morphedByMany waar het óók vereist is)
-     * - foreign_key, local_key (optioneel, afhankelijk van type)
-     * - morph_name (voor morphOne/morphMany/morphToMany/morphedByMany)
-     * - pivot: string (pivot table voor belongsToMany/morphToMany)
-     * - using: class-string (custom pivot model)
-     * - where: array van [column => value] die als extra constraints worden toegevoegd
-     */
-    protected function makeResolver(string $modelClass, string $relation, array $def): \Closure
-    {
-        $type    = strtolower((string) Arr::get($def, 'type'));
-        $related = Arr::get($def, 'related');
-        $foreign = Arr::get($def, 'foreign_key');
-        $local   = Arr::get($def, 'local_key');
-        $morph   = Arr::get($def, 'morph_name');
-        $pivot   = Arr::get($def, 'pivot');
-        $using   = Arr::get($def, 'using');
-        $wheres  = (array) Arr::get($def, 'where', []);
+            foreach ($defs as $name => $def) {
+                $type   = strtolower((string) Arr::get($def, 'type'));
+                $related = Arr::get($def, 'related');
 
-        if (! $type) {
-            throw new InvalidArgumentException("dynamic-relations: '{$modelClass}::{$relation}' mist 'type'.");
-        }
+                $foreignKey = Arr::get($def, 'foreign_key');
+                $localKey   = Arr::get($def, 'local_key');
+                $ownerKey   = Arr::get($def, 'owner_key'); // voor belongsTo
+                $pivotTable = Arr::get($def, 'pivot');
+                $using      = Arr::get($def, 'using');
+                $morphName  = Arr::get($def, 'morph_name');
+                $where      = (array) Arr::get($def, 'where', []);
 
-        // Valideer requireds per type
-        $needsRelated = in_array($type, [
-            'hasone','hasmany','belongsto','belongstomany','morphone','morphmany','morphtomany','morphedbymany'
-        ], true);
-
-        if ($needsRelated && (! is_string($related) || ! class_exists($related))) {
-            throw new InvalidArgumentException("dynamic-relations: '{$modelClass}::{$relation}' heeft een ongeldige 'related' class.");
-        }
-
-        return function (Model $model) use ($type, $related, $foreign, $local, $morph, $pivot, $using, $wheres) {
-            $rel = match ($type) {
-                'hasone'       => $model->hasOne($related, $foreign, $local),
-                'hasmany'      => $model->hasMany($related, $foreign, $local),
-                'belongsto'    => $model->belongsTo($related, $foreign, $local),
-                'belongstomany'=> (function () use ($model, $related, $pivot, $foreign, $local, $using) {
-                    $r = $model->belongsToMany($related, $pivot, $foreign, $local);
-                    if (is_string($using) && class_exists($using)) {
-                        $r = $r->using($using);
+                if (in_array($type, ['morphto'], true)) {
+                    // morphTo heeft geen required related class
+                } else {
+                    if (!is_string($related) || !class_exists($related)) {
+                        throw new InvalidArgumentException("DynamicRelations: [{$parentClass}->{$name}] related class niet gevonden.");
                     }
-                    return $r;
-                })(),
-                'morphto' => $model->morphTo($morph),
-                'morphone'     => $model->morphOne($related, $morph, $local, $foreign),
-                'morphmany'    => $model->morphMany($related, $morph, $local, $foreign),
-                'morphtomany'  => (function () use ($model, $related, $morph, $pivot, $foreign, $local) {
-                    // morphToMany(Related::class, morphName, table = null, foreignPivotKey = null, relatedPivotKey = null, parentKey = null, relatedKey = null)
-                    return $model->morphToMany($related, $morph, $pivot, $foreign, $local);
-                })(),
-                'morphedbymany'=> (function () use ($model, $related, $morph, $pivot, $foreign, $local) {
-                    // morphedByMany(Related::class, morphName, table = null, foreignPivotKey = null, relatedPivotKey = null, parentKey = null, relatedKey = null)
-                    return $model->morphedByMany($related, $morph, $pivot, $foreign, $local);
-                })(),
-                default        => throw new InvalidArgumentException("dynamic-relations: onbekend type '{$type}'."),
-            };
+                }
 
-            // Extra declaratieve constraints
-            foreach ($wheres as $column => $value) {
-                $rel->where($column, $value);
+                // Registreer enkel op het specifieke parent model
+                $parentClass::resolveRelationUsing($name, function (Model $model) use ($type, $related, $foreignKey, $localKey, $ownerKey, $pivotTable, $using, $morphName, $where) {
+                    switch ($type) {
+                        case 'hasone':
+                            $rel = $model->hasOne($related, $foreignKey, $localKey);
+                            break;
+
+                        case 'hasmany':
+                            $rel = $model->hasMany($related, $foreignKey, $localKey);
+                            break;
+
+                        case 'belongsto':
+                            // belongsTo(signature): (related, foreignKey = null, ownerKey = null, relation = null)
+                            $rel = $model->belongsTo($related, $foreignKey, $ownerKey);
+                            break;
+
+                        case 'belongstomany':
+                            // belongsToMany(signature): (related, table = null, foreignPivotKey = null, relatedPivotKey = null, parentKey = null, relatedKey = null, relation = null)
+                            $rel = $model->belongsToMany(
+                                $related,
+                                $pivotTable,
+                                // We hergebruiken keys zoals je ze al in config gebruikt:
+                                // foreign_key => pivot kolom naar parent
+                                // local_key   => pivot kolom naar related
+                                $foreignKey,
+                                $localKey
+                            );
+                            if (is_string($using) && class_exists($using)) {
+                                $rel = $rel->using($using);
+                            }
+                            break;
+
+                        case 'morphone':
+                            $rel = $model->morphOne($related, $morphName);
+                            break;
+
+                        case 'morphmany':
+                            $rel = $model->morphMany($related, $morphName);
+                            break;
+
+                        case 'morphto':
+                            $rel = $model->morphTo($morphName);
+                            break;
+
+                        default:
+                            throw new InvalidArgumentException("DynamicRelations: unsupported type [{$type}].");
+                    }
+
+                    // Eventuele extra constraints
+                    foreach ($where as $col => $val) {
+                        $rel->where($col, $val);
+                    }
+
+                    return $rel;
+                });
             }
-
-            return $rel;
-        };
+        }
     }
 }

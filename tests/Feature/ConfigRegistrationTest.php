@@ -1,8 +1,18 @@
 <?php
+
+use DdDevelopments\DynamicRelations\DynamicRelationsServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+
+beforeEach(function () {
+    Model::unguard();
+});
+
+afterEach(function () {
+    Model::reguard();
+});
 
 it('registreert relations via config', function () {
     Schema::create('users', fn (Blueprint $t) => $t->id());
@@ -11,7 +21,7 @@ it('registreert relations via config', function () {
     $user = new class extends Model { protected $table = 'users'; public $timestamps = false; };
     $post = new class extends Model { protected $table = 'posts'; public $timestamps = false; };
 
-    // Stuur provider via config
+    // Zet mapping voor de anonieme klassenaam
     Config::set('dynamic-relations.relations', [
         $user::class => [
             'posts' => [
@@ -23,9 +33,9 @@ it('registreert relations via config', function () {
         ],
     ]);
 
-    // Boot provider manueel (Testbench laadt service providers automatisch als extra is ingesteld.
-    // Zo niet, kun je hier expliciet register/boot callen.)
-    app()->register(\DdDevelopments\DynamicRelations\DynamicRelationsServiceProvider::class);
+    // <<< BELANGRIJK: provider opnieuw boosten nadat config gezet is
+    $provider = new DynamicRelationsServiceProvider(app());
+    $provider->boot();
 
     $u = $user::query()->create();
     $post::query()->create(['user_id' => $u->id]);

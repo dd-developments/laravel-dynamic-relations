@@ -1,8 +1,10 @@
 <?php
-use DdDevelopments\DynamicRelations\app\Models\User;
+
+use DdDevelopments\DynamicRelations\app\Models\Image;
 use DdDevelopments\DynamicRelations\app\Models\Post;
 use DdDevelopments\DynamicRelations\app\Models\Role;
-use DdDevelopments\DynamicRelations\app\Models\Image;
+use DdDevelopments\DynamicRelations\app\Models\RoleUser;
+use DdDevelopments\DynamicRelations\app\Models\User;
 
 return [
     /*
@@ -29,41 +31,41 @@ return [
     |
     */
 
-     'relations' => [
-         User::class => [
-             'posts' => [
-                 'type'        => 'hasMany',
-                 'related'     => Post::class,
-                 'foreign_key' => 'user_id',
-                 'local_key'   => 'id',
-             ],
-             'roles' => [
-                 'type'        => 'belongsToMany',
-                 'related'     => Role::class,
-                 'pivot'       => 'role_user',
-                 'foreign_key' => 'user_id',
-                 'local_key'   => 'role_id',
-                 'using'       => RoleUser::class,
-             ],
-         ],
-         Post::class => [
-             'author' => [
-                 'type'        => 'belongsTo',
-                 'related'     => User::class,
-                 'foreign_key' => 'user_id',
-                 'local_key'   => 'id',
-             ],
-             'images' => [
-                 'type'       => 'morphMany',
-                 'related'    => Image::class,
-                 'morph_name' => 'imageable',
-             ],
-         ],
-         Image::class => [
-             'imageable' => [
-                 'type'       => 'morphTo',
-                 'morph_name' => 'imageable',
-             ],
-         ],
-     ],
+    'relations' => [
+        'App\Models\User' => [
+            'posts' => [
+                'type'        => 'hasMany',
+                'related'     => 'App\Models\Post',
+                'foreign_key' => 'user_id',
+                'local_key'   => 'id',
+            ],
+            'roles' => [
+                'type'        => 'belongsToMany',
+                'related'     => 'App\Models\Role',
+                'pivot'       => 'role_user',
+                'foreign_key' => 'user_id', // pivot kolom naar users
+                'local_key'   => 'role_id', // pivot kolom naar roles
+                'using'       => 'DdDevelopments\DynamicRelations\app\Models\RoleUser', // <-- STRING, geen ::class
+            ],
+        ],
+        'App\Models\Post' => [
+            'author' => [
+                'type'        => 'belongsTo',
+                'related'     => 'App\Models\User',
+                'foreign_key' => 'user_id',
+                'owner_key'   => 'id',
+            ],
+            'images' => [
+                'type'       => 'morphMany',
+                'related'    => 'App\Models\Image',
+                'morph_name' => 'imageable',
+            ],
+        ],
+        'App\Models\Image' => [
+            'imageable' => [
+                'type'       => 'morphTo',
+                'morph_name' => 'imageable',
+            ],
+        ],
+    ],
  ];

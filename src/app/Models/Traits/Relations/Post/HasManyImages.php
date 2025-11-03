@@ -2,6 +2,7 @@
 
 namespace DdDevelopments\DynamicRelations\app\Models\Traits\Relations\Post;
 
+
 use DdDevelopments\DynamicRelations\app\Models\Image;
 use DdDevelopments\DynamicRelations\DynamicRelations;
 use Illuminate\Database\Eloquent\Model;
