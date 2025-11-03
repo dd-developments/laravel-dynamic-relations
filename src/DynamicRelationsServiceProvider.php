@@ -26,22 +26,40 @@ class DynamicRelationsServiceProvider extends ServiceProvider
         return null;
     }
 
-    public function register(): void
-    {
-        if ($config = $this->findConfigPath()) {
-            $this->mergeConfigFrom($config, 'dynamic-relations');
+   public function register(): void
+{
+    // Config samenvoegen zodra we 'm vinden
+    foreach ([
+        __DIR__ . '/../config/dynamic-relations.php',     // src/
+        __DIR__ . '/../../config/dynamic-relations.php',  // src/Providers/
+    ] as $path) {
+        if (is_file($path)) {
+            $this->mergeConfigFrom($path, 'dynamic-relations');
+            break;
         }
     }
+}
 
-    public function boot(): void
-    {
-        if ($config = $this->findConfigPath()) {
-            if ($this->app->runningInConsole()) {
-                $this->publishes([
-                    $config => config_path('dynamic-relations.php'),
-                ], 'dynamic-relations-config');
-            }
-        }
+public function boot(): void
+{
+    // Publish mapping registreren (zonder afhankelijk te zijn van findConfigPath())
+    $configPath = null;
+    foreach ([
+        __DIR__ . '/../config/dynamic-relations.php',     // src/
+        __DIR__ . '/../../config/dynamic-relations.php',  // src/Providers/
+    ] as $path) {
+        if (is_file($path)) { $configPath = $path; break; }
+    }
+
+    if ($configPath) {
+        $mapping = [$configPath => config_path('dynamic-relations.php')];
+
+        // jouw tag
+        $this->publishes($mapping, 'dynamic-relations-config');
+
+        // extra alias (veel devs zoeken op --tag=config)
+        $this->publishes($mapping, 'config');
+    }
 
         // Hierna mag je veilig config lezen
         $relations = (array) config('dynamic-relations.relations', []);
