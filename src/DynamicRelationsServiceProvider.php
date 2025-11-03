@@ -22,42 +22,29 @@ class DynamicRelationsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        // Merge config (geen hard require)
-        $config = $this->firstExisting([
-            dirname(__DIR__) . '/config/dynamic-relations.php', // src/.. → config
-            __DIR__ . '/../config/dynamic-relations.php',       // src/ + config
-            __DIR__ . '/../../config/dynamic-relations.php',    // src/Providers + config
-        ]);
-
-        if ($config) {
-            $this->mergeConfigFrom($config, 'dynamic-relations');
-        }
-    }
-
-    public function boot(): void
-    {
-        // Alle kandidaatbronnen
+        // Kandidaten (werken in zowel dist als source)
         $candidates = [
             dirname(__DIR__) . '/config/dynamic-relations.php', // package root/config
             __DIR__ . '/../config/dynamic-relations.php',       // src/config
             __DIR__ . '/../../config/dynamic-relations.php',    // src/Providers/../config
         ];
 
-        // Bouw mapping met ALLE bestaande files (geen break; meerdere mogen bestaan)
-        $mapping = [];
+        // Merge + publishes REGISTREREN HIER (met static::) zodat VendorPublishCommand ze altijd ziet
         foreach ($candidates as $path) {
             if (is_file($path)) {
-                $mapping[$path] = config_path('dynamic-relations.php');
+                $this->mergeConfigFrom($path, 'dynamic-relations');
+
+                // registreer beide tags – geen guards, geen console check
+                static::publishes([$path => config_path('dynamic-relations.php')], 'dynamic-relations-config');
+                static::publishes([$path => config_path('dynamic-relations.php')], 'config');
+                break; // eerste hit is genoeg
             }
         }
+    }
 
-        // ⚠️ Belangrijk: GEEN runningInConsole guard — zo staat de tag altijd in de lijst.
-        if (! empty($mapping)) {
-            $this->publishes($mapping, 'dynamic-relations-config');
-            $this->publishes($mapping, 'config'); // alias
-        }
-
-        // --- rest blijft ongewijzigd ---
+    public function boot(): void
+    {
+        // Alleen je relation-registratie; géén publishes hier
         $relations = config('dynamic-relations.relations');
         if (! is_array($relations)) {
             return;
