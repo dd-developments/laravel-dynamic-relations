@@ -1,9 +1,9 @@
 <?php
 
-namespace DdDevelopments\DynamicRelations\app\Models\Traits\Relations\Post;
+namespace DdDevelopments\DynamicRelations\Models\Traits\Relations\Post;
 
-use DdDevelopments\DynamicRelations\app\Models\User;
 use DdDevelopments\DynamicRelations\DynamicRelations;
+use DdDevelopments\DynamicRelations\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 trait IsFromAuthor

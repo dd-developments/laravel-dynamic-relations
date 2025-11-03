@@ -1,10 +1,5 @@
 <?php
 
-use DdDevelopments\DynamicRelations\app\Models\Image;
-use DdDevelopments\DynamicRelations\app\Models\Post;
-use DdDevelopments\DynamicRelations\app\Models\Role;
-use DdDevelopments\DynamicRelations\app\Models\RoleUser;
-use DdDevelopments\DynamicRelations\app\Models\User;
 
 return [
     /*
@@ -45,10 +40,10 @@ return [
                 'pivot'       => 'role_user',
                 'foreign_key' => 'user_id', // pivot kolom naar users
                 'local_key'   => 'role_id', // pivot kolom naar roles
-                'using'       => 'DdDevelopments\DynamicRelations\app\Models\RoleUser', // <-- STRING, geen ::class
+                'using'       => 'DdDevelopments\DynamicRelations\Models\RoleUser', // <-- STRING, geen ::class
             ],
         ],
-        'App\Models\Post' => [
+        'App\Models\\Post' => [
             'author' => [
                 'type'        => 'belongsTo',
                 'related'     => 'App\Models\User',

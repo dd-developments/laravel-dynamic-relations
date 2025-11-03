@@ -1,8 +1,8 @@
 <?php
 
-namespace DdDevelopments\DynamicRelations\app\Models;
+namespace DdDevelopments\DynamicRelations\Models;
 
-use DdDevelopments\DynamicRelations\app\Models\Traits\Relations\Image\BelongsToImageable;
+use DdDevelopments\DynamicRelations\Models\Traits\Relations\Image\BelongsToImageable;
 use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model

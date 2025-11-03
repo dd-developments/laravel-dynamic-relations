@@ -2,9 +2,9 @@
 
 namespace DdDevelopments\DynamicRelations;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
 class DynamicRelationsServiceProvider extends ServiceProvider
@@ -26,41 +26,40 @@ class DynamicRelationsServiceProvider extends ServiceProvider
         return null;
     }
 
-   public function register(): void
-{
-    // Config samenvoegen zodra we 'm vinden
-    foreach ([
-        __DIR__ . '/../config/dynamic-relations.php',     // src/
-        __DIR__ . '/../../config/dynamic-relations.php',  // src/Providers/
-    ] as $path) {
-        if (is_file($path)) {
-            $this->mergeConfigFrom($path, 'dynamic-relations');
-            break;
+    public function register(): void
+    {
+        // Merge config zodra we 'm vinden (zonder hard require)
+        foreach ([
+                     dirname(__DIR__) . '/config/dynamic-relations.php', // src/.. → config
+                     __DIR__ . '/../config/dynamic-relations.php',       // src/ + config
+                     __DIR__ . '/../../config/dynamic-relations.php',    // src/Providers + config
+                 ] as $path) {
+            if (is_file($path)) {
+                $this->mergeConfigFrom($path, 'dynamic-relations');
+                break;
+            }
         }
     }
-}
 
-public function boot(): void
-{
-    // Publish mapping registreren (zonder afhankelijk te zijn van findConfigPath())
-    $configPath = null;
-    foreach ([
-        __DIR__ . '/../config/dynamic-relations.php',     // src/
-        __DIR__ . '/../../config/dynamic-relations.php',  // src/Providers/
-    ] as $path) {
-        if (is_file($path)) { $configPath = $path; break; }
-    }
+    public function boot(): void
+    {
+        // Registreer publishes ZONDER afhankelijk te zijn van findConfigPath()
+        $publishFrom = null;
+        foreach ([
+                     dirname(__DIR__) . '/config/dynamic-relations.php',
+                     __DIR__ . '/../config/dynamic-relations.php',
+                     __DIR__ . '/../../config/dynamic-relations.php',
+                 ] as $path) {
+            if (is_file($path)) { $publishFrom = $path; break; }
+        }
 
-    if ($configPath) {
-        $mapping = [$configPath => config_path('dynamic-relations.php')];
-
-        // jouw tag
-        $this->publishes($mapping, 'dynamic-relations-config');
-
-        // extra alias (veel devs zoeken op --tag=config)
-        $this->publishes($mapping, 'config');
-    }
-
+        if ($publishFrom) {
+            $mapping = [$publishFrom => config_path('dynamic-relations.php')];
+            // jouw eigen tag
+            $this->publishes($mapping, 'dynamic-relations-config');
+            // én een generieke alias waar veel devs op zoeken
+            $this->publishes($mapping, 'config');
+        }
         // Hierna mag je veilig config lezen
         $relations = (array) config('dynamic-relations.relations', []);
 

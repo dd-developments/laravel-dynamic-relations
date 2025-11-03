@@ -1,10 +1,10 @@
 <?php
 
-namespace DdDevelopments\DynamicRelations\app\Models\Traits\Relations\Post;
+namespace DdDevelopments\DynamicRelations\Models\Traits\Relations\Post;
 
 
-use DdDevelopments\DynamicRelations\app\Models\Image;
 use DdDevelopments\DynamicRelations\DynamicRelations;
+use DdDevelopments\DynamicRelations\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 
 trait HasManyImages

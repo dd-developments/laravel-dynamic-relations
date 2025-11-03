@@ -1,6 +1,6 @@
 <?php
 
-namespace DdDevelopments\DynamicRelations\app\Models\Traits\Relations\Image;
+namespace DdDevelopments\DynamicRelations\Models\Traits\Relations\Image;
 
 use DdDevelopments\DynamicRelations\DynamicRelations;
 use Illuminate\Database\Eloquent\Model;

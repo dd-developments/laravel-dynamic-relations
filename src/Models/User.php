@@ -1,10 +1,10 @@
 <?php
 
-namespace DdDevelopments\DynamicRelations\app\Models;
+namespace DdDevelopments\DynamicRelations\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class User extends Model
 {
     protected $guarded = [];
     public $timestamps = false;
