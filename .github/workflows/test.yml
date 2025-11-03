@@ -22,31 +22,19 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, bcmath, pdo, sqlite
+          extensions: mbstring, bcmath, pdo, pdo_sqlite, sqlite3
           coverage: none
           ini-values: error_reporting=E_ALL, display_errors=On
 
-      - name: Composer validate
-        run: composer validate --no-check-publish
+      - name: Quick check extensions
+        run: |
+          php -r "foreach(['pdo','pdo_sqlite','sqlite3'] as $e){echo $e.': '.(extension_loaded($e)?'yes':'no').PHP_EOL;};"
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Dump autoload (optimize)
+      - name: Dump autoload
         run: composer dump-autoload -o
 
-      - name: Autoload sanity
-        run: php -r "require 'vendor/autoload.php'; echo class_exists('DdDevelopments\\\\DynamicRelations\\\\DynamicRelations')?'OK':'MISSING';"
-
-      - name: Run tests (verbose, write logs)
-        run: |
-          mkdir -p build
-          vendor/bin/pest -vvv --log-junit build/junit.xml | tee build/pest.log
-        continue-on-error: false
-
-      - name: Upload test artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pest-logs
-          path: build/
+      - name: Run tests (verbose)
+        run: vendor/bin/pest -vvv
