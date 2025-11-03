@@ -25,24 +25,25 @@ jobs:
           coverage: none
           ini-values: error_reporting=E_ALL, display_errors=On
 
-      - name: Show PHP info (debug)
-        run: |
-          php -v
-          php -m | sort
-          php -r "echo 'pdo_sqlite ext? ', in_array('pdo_sqlite', get_loaded_extensions()) ? 'yes' : 'no', PHP_EOL;"
-          php -r "echo 'sqlite3 ext? ', in_array('sqlite3', get_loaded_extensions()) ? 'yes' : 'no', PHP_EOL;"
-
-      - name: Validate composer.json
+      - name: Composer validate
         run: composer validate --no-check-publish
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Dump autoload (just in case)
+      - name: Dump autoload (optimize)
         run: composer dump-autoload -o
 
-      - name: List dev packages (debug)
-        run: composer show -D
+      - name: Quick autoload sanity (class exists?)
+        run: php -r "require 'vendor/autoload.php'; echo class_exists('DdDevelopments\\\\DynamicRelations\\\\DynamicRelations')?'OK':'MISSING';"
 
-      - name: Run tests (verbose)
-        run: vendor/bin/pest -v
+      - name: Run tests (verbose + junit)
+        run: vendor/bin/pest -vvv --log-junit junit.xml
+        continue-on-error: false
+
+      - name: Upload test report (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit
+          path: junit.xml
