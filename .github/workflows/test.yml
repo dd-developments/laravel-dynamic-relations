@@ -2,10 +2,9 @@ name: tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
-  workflow_call: { }
+
 jobs:
   pest:
     runs-on: ubuntu-latest
@@ -34,16 +33,18 @@ jobs:
       - name: Dump autoload (optimize)
         run: composer dump-autoload -o
 
-      - name: Quick autoload sanity (class exists?)
+      - name: Autoload sanity
         run: php -r "require 'vendor/autoload.php'; echo class_exists('DdDevelopments\\\\DynamicRelations\\\\DynamicRelations')?'OK':'MISSING';"
 
-      - name: Run tests (verbose + junit)
-        run: vendor/bin/pest -vvv --log-junit junit.xml
+      - name: Run tests (verbose, write logs)
+        run: |
+          mkdir -p build
+          vendor/bin/pest -vvv --log-junit build/junit.xml | tee build/pest.log
         continue-on-error: false
 
-      - name: Upload test report (always)
+      - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: junit
-          path: junit.xml
+          name: pest-logs
+          path: build/
